@@ -1,0 +1,51 @@
+version: "3"
+services:
+  nginx_app:
+    container_name: nginx_app
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    restart: always
+    links:
+      - react_app
+
+  react_app:
+    container_name: react_app
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: npm start
+    restart: always
+    ports:
+      - 3000:3000
+    links:
+      - node_app
+
+  node_app:
+    container_name: node_app
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    command: npm start
+    restart: always
+    expose:
+      - 3001
+    ports:
+      - 3001:3001
+    links:
+      - mongo_db
+
+  mongo_db:
+    container_name: mongo_db
+    image: mongo
+    volumes:
+      - mongo_volume:/data/db
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+
+volumes:
+  mongo_volume:

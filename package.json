@@ -1,0 +1,39 @@
+{
+  "name": "react-node-starter",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "4.6.2",
+    "antd": "4.16.11",
+    "axios": "0.21.1",
+    "normalize.css": "8.0.1",
+    "react": "17.0.2",
+    "react-app-rewired": "2.1.8",
+    "react-dom": "17.0.2",
+    "react-redux": "7.2.4",
+    "react-router-dom": "5.2.0",
+    "redux": "4.1.1",
+    "redux-thunk": "2.3.0",
+    "immutable": "3.8.2",
+    "uuid": "8.3.2"
+  },
+  "devDependencies": {
+    "concurrently": "6.2.0",
+    "customize-cra": "1.0.0",
+    "nodemon": "2.0.12",
+    "react-scripts": "4.0.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "proxy": "http://node_app:3001",
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
+}
