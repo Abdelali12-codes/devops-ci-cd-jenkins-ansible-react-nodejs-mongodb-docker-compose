@@ -10,23 +10,23 @@ sudo service jenkins start
 sudo cat /var/lib/jenkins/secrets/initialAdminPassword
 ```
 
-## set up ansible server
+# set up ansible server
 
-# install ansible
+## install ansible
 
 ```
 yum install python-pip -y
 pip install ansible
 ```
 
-# create the inventory file
+## create the inventory file
 
 ```
 mkdir /etc/ansible
 sudo nano /etc/ansible/hosts
 ```
 
-## set up docker-compose
+# set up docker-compose
 
 ```
 sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -47,9 +47,9 @@ docker inspect postgres -f "{{json .NetworkSettings.Networks }}")
 
 - The backend : [nodejsmongodb](https://github.com/Abdelali12-codes/docker-compose-jenkins-ansible-react-mongo-nodejs-server)
 
-### set up the kubernetes cluster
+# Set up the kubernetes cluster
 
-## 2. run the following command on the both instances you created above
+### 1. run the following command on the both instances you created above
 
 ```
 sudo apt-get update
@@ -62,13 +62,13 @@ sudo apt-mark hold kubelet kubeadm kubectl
 sudo apt install docker.io
 ```
 
-## 3. initialization of the master node run the command below (run this command only on the master node)
+### 2. initialization of the master node run the command below (run this command only on the master node)
 
 ```
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 ```
 
-## 4. install the network plugin on the control plane (master node in our case)
+### 3. install the network plugin on the control plane (master node in our case)
 
 ```
 sudo kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
