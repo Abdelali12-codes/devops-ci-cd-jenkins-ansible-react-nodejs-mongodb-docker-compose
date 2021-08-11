@@ -8,6 +8,8 @@ RUN npm install
 
 EXPOSE 3000
 
+ENTRYPOINT npm start
+
 # FROM node:12 AS  builder
 
 # WORKDIR /app 

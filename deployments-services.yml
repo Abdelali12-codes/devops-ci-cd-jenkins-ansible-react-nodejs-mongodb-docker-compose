@@ -1,0 +1,205 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-db
+spec:
+  selector:
+    matchLabels:
+      app: mongo-db
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo-db
+    spec:
+      containers:
+      - name: mongo-db
+        image: mongo
+        ports:
+        - containerPort: 27017
+        # volumeMounts:
+        #   - mountPath: /usr/share/nginx/html
+        #     name: host-volume
+        #   - mountPath: /var/www/abdelali;
+        #     name: host-volume
+        #   - mountPath: /etc/nginx/conf.d
+        #     name: configmap
+      # volumes:
+      #   - name: host-volume
+      #     hostPath:
+      #       path: /home/abdelali/react-app # this the path on the worker node where your web site resie
+      #   - name: configmap
+      #     configMap:
+      #        name: nginx-config
+      #        items:
+      #          - key: abdelali.conf
+      #            path: abdelali.conf
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-db
+  labels:
+    app: mongo-db
+spec:
+  selector:
+    app: mongo-db
+  type: ClusterIP
+  ports:
+  - port: 27017
+    targetPort: 27017
+
+
+--- 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app
+spec:
+  selector:
+    matchLabels:
+      app: node-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: node-app
+    spec:
+      containers:
+      - name: node-app
+        image: abdelalidocker/jenkins-ansible-nodejs:latest
+        ports:
+        - containerPort: 3001
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: node-app
+  labels:
+    app: node-app
+spec:
+  selector:
+   app: node-app
+  type: ClusterIP
+  ports:
+  - port: 3001
+    targetPort: 3001
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: react-app
+spec:
+  selector:
+    matchLabels:
+      app: react-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: react-app
+    spec:
+      containers:
+      - name: react-app
+        image: abdelalidocker/jenkins-ansible-reactjs:latest
+        ports:
+        - containerPort: 3000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: react-app
+  labels:
+    app: react-app
+spec:
+  selector:
+   app: react-app
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+
+
+--- 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-conf
+data:
+  nginx.conf: |
+    upstream reactapp{
+      server react-app:3000;
+    }
+    server{
+      
+      listen 80;
+      index index.html;
+      root /usr/share/nginx/html;
+
+      location / {
+       proxy_pass http://reactapp;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $host;
+        proxy_redirect off;
+      }
+    
+    }
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-app
+spec:
+  selector:
+    matchLabels:
+      app: nginx-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-app
+    spec:
+      containers:
+      - name: nginx-app
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: /etc/nginx/conf.d
+            name: confignginx
+      volumes:
+        - name: confignginx
+          configMap:
+            name: nginx-conf
+            items:
+              - key: nginx.conf
+                path: nginx.conf
+
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-app
+  labels:
+    app: nginx-app
+spec:
+  selector:
+   app: react-app
+  type: NodePort
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    nodePort: 30700

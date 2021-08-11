@@ -1,2 +1,7 @@
 node_modules
 server
+nginx
+deployments-services.yml
+docker-compose.yml
+
+README.md
