@@ -17,13 +17,13 @@ spec:
         image: mongo
         ports:
         - containerPort: 27017
-        volumeMounts:
-          - mountPath: /data/db
-            name: host-volume
-      volumes:
-        - name: host-volume
-          hostPath:
-            path: /home/masternode/volumes # this the path on the worker node where your web site resie
+        # volumeMounts:
+        #   - mountPath: /data/db
+        #     name: host-volume
+      # volumes:
+      #   - name: host-volume
+      #     hostPath:
+      #       path: /home/masternode/volumes # this the path on the worker node where your web site resie
 ---
 
 apiVersion: v1
@@ -166,7 +166,7 @@ spec:
         ports:
         - containerPort: 80
         volumeMounts:
-          - mountPath: /etc/nginx/conf.d
+          - mountPath: /etc/nginx/conf.d/default.conf
             name: confignginx
       volumes:
         - name: confignginx
