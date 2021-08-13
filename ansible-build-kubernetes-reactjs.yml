@@ -1,0 +1,15 @@
+- name: create deployments and services
+  hosts: kubernetes
+  become: yes
+  become_user: root
+
+
+  tasks:
+
+  - name: create the depolyments and services
+    command: kubectl apply -f deployments-services.yml
+    args: 
+       chdir: /home/masternode/kubernetes
+
+  - name: restart the nginx app deployment
+    command: kubectl rollout restart deployment nginx-app

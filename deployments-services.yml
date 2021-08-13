@@ -86,69 +86,6 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: react-app
-spec:
-  selector:
-    matchLabels:
-      app: react-app
-  replicas: 1
-  template:
-    metadata:
-      labels:
-        app: react-app
-    spec:
-      containers:
-      - name: react-app
-        image: abdelalidocker/jenkins-ansible-reactjs:latest
-        ports:
-        - containerPort: 3000
-
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: react-app
-  labels:
-    app: react-app
-spec:
-  selector:
-   app: react-app
-  type: ClusterIP
-  ports:
-  - port: 3000
-    targetPort: 3000
-
-
---- 
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: nginx-conf
-data:
-  nginx.conf: |
-    upstream reactapp{
-      server react-app:3000;
-    }
-    server{
-      
-      listen 80;
-      index index.html;
-      root /usr/share/nginx/html;
-
-      location / {
-       proxy_pass http://reactapp;
-         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $host;
-        proxy_redirect off;
-      }
-    
-    }
-
----
-
-apiVersion: apps/v1
-kind: Deployment
-metadata:
   name: nginx-app
 spec:
   selector:
@@ -162,19 +99,17 @@ spec:
     spec:
       containers:
       - name: nginx-app
-        image: nginx
+        image: abdelalidocker/jenkins-ansible-reactjs:latest
         ports:
         - containerPort: 80
-        volumeMounts:
-          - mountPath: /etc/nginx/conf.d/default.conf
-            name: confignginx
-      volumes:
-        - name: confignginx
-          configMap:
-            name: nginx-conf
-            items:
-              - key: nginx.conf
-                path: nginx.conf
+        
+      # volumes:
+      #   - name: confignginx
+      #     configMap:
+      #       name: nginx-conf
+      #       items:
+      #         - key: nginx.conf
+      #           path: nginx.conf
 
 
 ---
@@ -186,7 +121,7 @@ metadata:
     app: nginx-app
 spec:
   selector:
-   app: react-app
+   app: nginx-app
   type: NodePort
   ports:
   - port: 80

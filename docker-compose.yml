@@ -1,29 +1,30 @@
 version: "3"
 services:
-  # nginx_app:
-  #   container_name: nginx_app
-  #   build:
-  #     context: ./nginx
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     _ 80:80
-  #   restart: always
-  #   links:
-  #     _ react_app
+  nginx_app:
+    container_name: nginx_app
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    restart: always
+    links:
+      - react_app
 
   react_app:
     container_name: react_app
     build:
       context: ./
       dockerfile: Dockerfile
-    # command: npm start
+    command: npm start
     restart: always
-    # expose:
-    #   _ 3000
-    # ports:
-    #   _ 3000:3000
+    expose:
+      - 3000
     ports:
-      - 80:80
+      - 3000:3000
+    # ports:
+    #   - 80:80
+    
     links:
       - node_app
 
