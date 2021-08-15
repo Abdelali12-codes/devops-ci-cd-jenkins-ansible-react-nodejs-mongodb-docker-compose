@@ -76,14 +76,14 @@ docker inspect postgres -f "{{json .NetworkSettings.Networks }}")
 
 ```
 
-sudo apt-get update
+sudo apt-get update -y
 sudo apt-get install -y apt-transport-https ca-certificates curl
 sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
 echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt-get update
+sudo apt-get update -y
 sudo apt-get install -y kubelet kubeadm kubectl
 sudo apt-mark hold kubelet kubeadm kubectl
-sudo apt install docker.io
+sudo apt install docker.io -y
 
 ```
 
@@ -95,6 +95,18 @@ sudo kubeadm init --pod-network-cidr=10.244.0.0/16
 
 ```
 
+### fix issues if you faced error in the previous step
+```
+
+sudo swapoff -a
+sudo sed -i '/ swap / s/^/#/' /etc/fstab
+
+# Reboot a machine after that.
+
+kubeadm reset
+kubeadm init --ignore-preflight-errors all
+
+```
 ### 3. install the network plugin on the control plane (master node in our case)
 
 ```

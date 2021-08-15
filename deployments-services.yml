@@ -102,15 +102,6 @@ spec:
         image: abdelalidocker/jenkins-ansible-reactjs:latest
         ports:
         - containerPort: 80
-        
-      # volumes:
-      #   - name: confignginx
-      #     configMap:
-      #       name: nginx-conf
-      #       items:
-      #         - key: nginx.conf
-      #           path: nginx.conf
-
 
 ---
 apiVersion: v1
