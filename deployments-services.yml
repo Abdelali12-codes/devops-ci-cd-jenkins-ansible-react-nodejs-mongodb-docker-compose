@@ -20,10 +20,13 @@ spec:
         volumeMounts:
           - mountPath: /data/db
             name: host-volume
+      
       volumes:
         - name: host-volume
           hostPath:
-            path: /home/masternode/volumes # this the path on the worker node where your web site resie
+            path: /home/ubuntu/volumes
+            type: DirectoryOrCreate
+                                          # this the path on the worker node where your web site resie
 ---
 
 apiVersion: v1
