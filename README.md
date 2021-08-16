@@ -87,27 +87,26 @@ sudo apt install docker.io -y
 
 ```
 
-### 2. initialization of the master node run the command below (run this command only on the master node)
+
+### 2. check the cgroup driver of your container runtime (docker in our case)
 
 ```
 
-sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+sudo docker info | grep -i cgroup
 
 ```
 
-### fix issues if you faced error in the previous step
+
+### 3. initialization of the master node run the command below (run this command only on the master node)
+* make sure that the kubelet and the container runtime have the same cgroup driver
 ```
 
-sudo swapoff -a
-sudo sed -i '/ swap / s/^/#/' /etc/fstab
-
-# Reboot a machine after that.
-
-kubeadm reset
-kubeadm init --ignore-preflight-errors all
+sudo kubeadm init --config config-kubeadm.yml
 
 ```
-### 3. install the network plugin on the control plane (master node in our case)
+
+
+### 4. install the network plugin on the control plane (master node in our case)
 
 ```
 
